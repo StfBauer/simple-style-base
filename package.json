@@ -1,0 +1,31 @@
+{
+  "name": "simple-style-base",
+  "version": "0.0.1",
+  "description": "Simple Style Base configuration",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "Style",
+    "Guide",
+    "Simple",
+    "Style",
+    "Atomic",
+    "Design",
+    "CSS",
+    "SASS"
+  ],
+  "author": "Stefan Bauer",
+  "license": "MIT",
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-load-plugins": "^1.5.0",
+    "handlebars": "^4.0.11",
+    "prismjs": "^1.9.0"
+  },
+  "dependencies": {
+    "browser-sync": "^2.22.0",
+    "es6-promise": "^4.2.2"
+  }
+}
