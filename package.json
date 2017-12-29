@@ -21,12 +21,20 @@
   "devDependencies": {
     "gulp": "^3.9.1",
     "gulp-autoprefixer": "^4.0.0",
+    "gulp-concat": "^2.6.1",
+    "gulp-declare": "^0.3.0",
+    "gulp-handlebars": "^4.0.0",
     "gulp-load-plugins": "^1.5.0",
     "gulp-plumber": "^1.1.0",
     "gulp-sass": "^3.1.0",
     "gulp-sourcemaps": "^2.6.2",
+    "gulp-tslint": "^8.1.2",
+    "gulp-typescript": "^3.2.3",
+    "gulp-wrap": "^0.13.0",
     "handlebars": "^4.0.11",
-    "prismjs": "^1.9.0"
+    "prismjs": "^1.9.0",
+    "tslint": "^5.8.0",
+    "typescript": "^2.6.2"
   },
   "dependencies": {
     "browser-sync": "^2.22.0",

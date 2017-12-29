@@ -2,7 +2,8 @@
 let gulp = require('gulp'),
     $ = require('gulp-load-plugins')({
         lazy: true
-    });
+    }),
+    ts = require('gulp-typescript');
 
 /* Browser Sync */
 let browserSync = require('browser-sync'),
@@ -11,14 +12,79 @@ let browserSync = require('browser-sync'),
 /* Configurations */
 let config = require('./ssg.core.config');
 
+/* core engine */
+let ssgCore = require('./ssg-core-engine/ssg.core.precompile'),
+    ssgCoreConfig = require('./ssg-core-engine/ssg.core.genConfig');
+
+
 // watchs on file system
 let watches = () => {
 
     // watch all style changes in app/styles
-    console.log(config.watches.styles);
     gulp.watch(config.watches.styles, ['sass:compile'], reload);
 
-}
+    // watch for all typescript files in app/scripts
+    gulp.watch(config.watches.scripts, ['ts:compile'], reload);
+
+    // Update configuration
+    gulp.watch(config.watches.ssg)
+        // item was changed
+        .on('change', ssgCoreConfig.fsEvents);
+
+    // Precompile all patterns
+    gulp.watch(config.watches.ssg, ['ssg:precompile'], reload);
+
+};
+
+// Generate index file for all pattern
+gulp.task('ssg:config', () => {
+
+    // Get pattern path
+    var patternPath = config.ssg.path;
+
+    var curConfig = {
+        patterns: patternPath,
+        configFile: config.ssg.config
+    };
+
+    // parse configuration and log
+    gulp.src(patternPath)
+        .pipe(ssgCoreConfig
+            .createConfig(curConfig));
+
+});
+
+// Precompile handle bar templates
+gulp.task('ssg:precompile', ['ssg:config'], () => {
+
+    return ssgCore(config.ssg);
+
+});
+
+// General typescript compilation
+gulp.task('ts:compile', () => {
+
+    var tsProject = ts.createProject(config.tsconfig);
+
+    return gulp.src(config.watches.scripts)
+        .pipe(
+        $.plumber()
+        )
+        .pipe(
+        $.tslint({
+            formatter: "prose"
+        })
+        )
+        // .pipe($.tslint.report())
+        .pipe(ts(config.tsconfig))
+        .pipe(
+        gulp.dest(config.target.scripts)
+        )
+        .pipe(reload({
+            stream: true
+        }));
+
+});
 
 // SASS compilation
 gulp.task('sass:compile', () => {
@@ -45,7 +111,7 @@ gulp.task('sass:compile', () => {
 });
 
 // Gulp serve task
-gulp.task('serve', [], () => {
+gulp.task('serve', ['ssg:precompile'], () => {
 
     // init all watches
     watches();
