@@ -818,26 +818,5 @@ var ssg;
 })(ssg || (ssg = {}));
 ;
 ssg.UI.Init();
-/* tslint:disable */
-Handlebars.registerHelper('description', function (block) {
-    var description = "", markdownKey = block.data.root.baseFilter + '_' + block.data.root.title;
-    // console.log("Helper called ::: ", markdownKey, ssgDoc);
-    if (ssgDoc[markdownKey] !== undefined) {
-        // console.log('MARKDOWN FOUND :::: ');
-        description = ssgDoc[markdownKey].body;
-        return new Handlebars.SafeString(description);
-    }
-    else {
-        // description = block.data.root.description;
-        return block.data.root.description;
-    }
-});
-/* tslint:enable */ 
-
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.UIState = function () {
-    return "hello World";
-};
 
 //# sourceMappingURL=ssg.js.map

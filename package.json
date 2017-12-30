@@ -19,6 +19,8 @@
   "author": "Stefan Bauer",
   "license": "MIT",
   "devDependencies": {
+    "browser-sync": "^2.22.0",
+    "chalk": "^2.3.0",
     "gulp": "^3.9.1",
     "gulp-autoprefixer": "^4.0.0",
     "gulp-concat": "^2.6.1",
@@ -30,6 +32,7 @@
     "gulp-sourcemaps": "^2.6.2",
     "gulp-tslint": "^8.1.2",
     "gulp-typescript": "^3.2.3",
+    "gulp-util": "^3.0.8",
     "gulp-wrap": "^0.13.0",
     "handlebars": "^4.0.11",
     "prismjs": "^1.9.0",
@@ -37,7 +40,6 @@
     "typescript": "^2.6.2"
   },
   "dependencies": {
-    "browser-sync": "^2.22.0",
     "es6-promise": "^4.2.2"
   }
 }

@@ -1,0 +1,56 @@
+{
+    "patterns": [
+        {
+            "title": "atom",
+            "description": "",
+            "filename": "atom",
+            "filepath": "atoms/atom.hbs"
+        },
+        {
+            "title": "molecule",
+            "description": "",
+            "filename": "molecule",
+            "filepath": "molecules/molecule.hbs"
+        },
+        {
+            "title": "organism",
+            "description": "",
+            "filename": "organism",
+            "filepath": "organism/organism.hbs"
+        },
+        {
+            "title": "page",
+            "description": "",
+            "filename": "page",
+            "filepath": "pages/page.hbs"
+        },
+        {
+            "title": "template",
+            "description": "",
+            "filename": "template",
+            "filepath": "templates/template.hbs"
+        }
+    ],
+    "folder": [
+        {
+            "name": "atoms",
+            "description": "Contains all atom elements"
+        },
+        {
+            "name": "molecules",
+            "description": "Contains all molecule elements"
+        },
+        {
+            "name": "organism",
+            "description": "Contains all organism elements"
+        },
+        {
+            "name": "templates",
+            "description": "Contains all templates elements"
+        },
+        {
+            "name": "pages",
+            "description": "Contains all pages elements"
+        }
+    ]
+}
