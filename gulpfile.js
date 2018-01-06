@@ -34,6 +34,9 @@ let watches = () => {
     // Precompile all patterns
     gulp.watch(config.watches.ssg, ['ssg:precompile'], reload);
 
+    // Watch for documentation changes
+    gulp.watch(config.watches.documentation, ['doc:markdown'], reload);
+
 };
 
 // Generate index file for all pattern
@@ -53,6 +56,44 @@ gulp.task('ssg:config', () => {
             .createConfig(curConfig));
 
 });
+
+// Generate Dockumentation
+gulp.task('doc:markdown', () => {
+
+    return gulp.src(config.watches.documentation)
+        .pipe(markdown({
+            pedantic: true,
+            smartypants: true
+        }))
+        .pipe(jsoncombine(config.documentation.path, function (data) {
+
+            var keys = [],
+                name,
+                newDocData = {};
+
+            for (name in data) {
+
+                // check for slashes in variable name
+                var newname = name.replace(new RegExp(/\/|\\/g), '_');
+
+                // create a new object property with normalized name
+                newDocData[newname] = {
+                    title: data[name].title,
+                    body: data[name].body
+                }
+
+            }
+
+            // return new buffer in wrapped table
+            return new Buffer("var ssgDoc = " + JSON.stringify(newDocData));
+
+        }))
+        .pipe(gulp.dest('.tmp/'))
+        .pipe(reload({
+            stream: true
+        }));
+});
+
 
 // Precompile handle bar templates
 gulp.task('ssg:precompile', ['ssg:config'], () => {
@@ -111,7 +152,7 @@ gulp.task('sass:compile', () => {
 });
 
 // Gulp serve task
-gulp.task('serve', ['ssg:precompile'], () => {
+gulp.task('serve', ['ssg:precompile', 'sass:compile', 'doc:markdown'], () => {
 
     // init all watches
     watches();
