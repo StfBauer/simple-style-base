@@ -15,11 +15,6 @@ module.exports = (() => {
                 routes: {
                     '/ssg-core/ui': 'ssg-core',
                     '/node_modules': '/'
-                    // ,
-                    // '/bower_components': 'bower_components',
-                    // '/.tmp': '/',
-                    
-
                 }
             },
             https: true,
@@ -31,7 +26,7 @@ module.exports = (() => {
         styles: '/styles/',
         scripts: '/script/',
         documentation: {
-            path: '/_documentation/ssg.doc.js'
+            path: '/scripts/ssg.doc.js'
         },
         ssg: {
             path: basepath + '/_patterns/**/*.hbs',
