@@ -3,7 +3,9 @@ let gulp = require('gulp'),
     $ = require('gulp-load-plugins')({
         lazy: true
     }),
-    ts = require('gulp-typescript');
+    ts = require('gulp-typescript'),
+    markdown = require('gulp-marked-json'),
+    jsoncombine = require('gulp-jsoncombine');
 
 /* Browser Sync */
 let browserSync = require('browser-sync'),
@@ -97,9 +99,7 @@ gulp.task('doc:markdown', () => {
 
 // Precompile handle bar templates
 gulp.task('ssg:precompile', ['ssg:config'], () => {
-
     return ssgCore(config.ssg);
-
 });
 
 // General typescript compilation
