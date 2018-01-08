@@ -39,6 +39,10 @@ let watches = () => {
     // Watch for documentation changes
     gulp.watch(config.watches.documentation, ['doc:markdown'], reload);
 
+    // Watch for configuration changes
+    gulp.watch('/app/_config/pattern.conf.json', reload);
+
+
 };
 
 // Generate index file for all pattern
