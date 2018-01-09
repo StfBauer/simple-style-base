@@ -1,3 +1,4 @@
+/** Gulp base **/
 /* GULP Configuration */
 let gulp = require('gulp'),
     $ = require('gulp-load-plugins')({
@@ -40,8 +41,8 @@ let watches = () => {
     gulp.watch(config.watches.documentation, ['doc:markdown'], reload);
 
     // Watch for configuration changes
-    gulp.watch('/app/_config/pattern.conf.json', reload);
-
+    gulp.watch(config.staticFiles)
+        .on('change', reload);
 
 };
 

@@ -1,14 +1,14 @@
 {
     "patterns": [
         {
-            "title": "Atom 01",
-            "description": "",
+            "title": "atom-1",
+            "description": "Hello World",
             "filename": "atom-1",
             "filepath": "atoms/atom-1.hbs"
         },
         {
-            "title": "Atom 02",
-            "description": "Hello World",
+            "title": "atom-2",
+            "description": "",
             "filename": "atom-2",
             "filepath": "atoms/atom-2.hbs"
         },

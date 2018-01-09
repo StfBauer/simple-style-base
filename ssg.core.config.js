@@ -46,7 +46,6 @@ module.exports = (() => {
             scripts: basepath + '/scripts/**/*.ts',
             // basepath + '/_patterns/**/[^_]*.hbs'
             ssg: [
-                basepath + '/_patterns/**',
                 basepath + '/_patterns/**/[^_]*.hbs'
             ],
             documentation: basepath + '/_documentation/**/*.md'
@@ -58,7 +57,11 @@ module.exports = (() => {
         target: {
             styles: tempdir + '/styles/',
             scripts: tempdir + '/scripts/'
-        }
+        },
+        staticFiles: [
+            basepath + '/**/*.html',
+            basepath + '/_config/**.conf.json'
+        ]
     }
 
     return config;
