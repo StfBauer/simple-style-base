@@ -2,7 +2,7 @@
     "patterns": [
         {
             "title": "atom-1",
-            "description": "Hello World",
+            "description": "",
             "filename": "atom-1",
             "filepath": "atoms/atom-1.hbs"
         },
@@ -11,6 +11,12 @@
             "description": "",
             "filename": "atom-2",
             "filepath": "atoms/atom-2.hbs"
+        },
+        {
+            "title": "test",
+            "description": "",
+            "filename": "test",
+            "filepath": "atoms/test.hbs"
         },
         {
             "title": "molecule",
