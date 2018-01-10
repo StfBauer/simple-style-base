@@ -41,7 +41,7 @@ let watches = () => {
     gulp.watch(config.watches.documentation, ['doc:markdown'], reload);
 
     // Watch for configuration changes
-    gulp.watch(config.staticFiles)
+    gulp.watch(config.watches.staticFiles)
         .on('change', reload);
 
 };

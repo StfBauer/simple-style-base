@@ -48,7 +48,12 @@ module.exports = (() => {
             ssg: [
                 basepath + '/_patterns/**/[^_]*.hbs'
             ],
-            documentation: basepath + '/_documentation/**/*.md'
+            documentation: basepath + '/_documentation/**/*.md',
+            staticFiles: [
+                appdir + '/_config/**.conf.json',
+                appdir + '/_data/**.js*',
+                appdir + '/**/*.html'
+            ]
         },
         watchesCore: {
             styles: coreBasePath + '/styles/**/*.scss',
@@ -57,11 +62,7 @@ module.exports = (() => {
         target: {
             styles: tempdir + '/styles/',
             scripts: tempdir + '/scripts/'
-        },
-        staticFiles: [
-            basepath + '/**/*.html',
-            basepath + '/_config/**.conf.json'
-        ]
+        }
     }
 
     return config;
