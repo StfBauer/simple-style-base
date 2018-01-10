@@ -114,17 +114,19 @@ gulp.task('ts:compile', () => {
 
     return gulp.src(config.watches.scripts)
         .pipe(
-        $.plumber()
+            $.plumber()
         )
         .pipe(
-        $.tslint({
-            formatter: "prose"
-        })
+            $.tslint({
+                configuration: "tslint.json",
+                formatter: "prose"
+            })
         )
-        // .pipe($.tslint.report())
-        .pipe(ts(config.tsconfig))
         .pipe(
-        gulp.dest(config.target.scripts)
+            ts(config.tsconfig)
+        )
+        .pipe(
+            gulp.dest(config.target.scripts)
         )
         .pipe(reload({
             stream: true
@@ -159,10 +161,11 @@ gulp.task('sass:compile', () => {
 // Gulp serve task
 gulp.task('serve', ['ssg:precompile', 'sass:compile', 'doc:markdown'], () => {
 
+    // start browser sync
+    browserSync(config.server);
+
     // init all watches
     watches();
 
-    // start browser sync
-    browserSync(config.server);
 
 });
