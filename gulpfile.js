@@ -121,6 +121,19 @@ gulp.task('ssg:precompile', ['ssg:config'], () => {
     return ssgCore(config.ssg);
 });
 
+
+// SASS Linting
+gulp.task('sass:lint', () => {
+
+    var watches = config.watches.styles;
+
+    return gulp.src(watches)
+        .pipe(sassLint())
+        .pipe(sassLint.format());
+
+});
+
+// Typescript Linting
 gulp.task('ts:lint', () => {
 
     return gulp.src(config.watches.scripts)
@@ -133,10 +146,12 @@ gulp.task('ts:lint', () => {
                 formatter: "stylish"
             })
         )
-        .pipe(tslint.report({ emitError: false }));
-        // .pipe(
-        //     gulp.dest('app/scripts')
-        // );
+        .pipe(tslint.report({
+            emitError: false
+        }));
+    // .pipe(
+    //     gulp.dest('app/scripts')
+    // );
 });
 
 
@@ -158,17 +173,6 @@ gulp.task('ts:compile', ['ts:lint'], () => {
         .pipe(reload({
             stream: true
         }));
-
-});
-
-// SASS Linting
-gulp.task('sass:lint', () => {
-
-    var watches = config.watches.styles;
-
-    return gulp.src(watches)
-        .pipe(sassLint())
-        .pipe(sassLint.format());
 
 });
 
@@ -242,28 +246,34 @@ gulp.task('serve:dist', ['dist'], () => {
 
 
 // Gulp serve task
-gulp.task('dist', ['clean', 'html:dist', 'ssg:precompile', 'sass:compile', 'doc:markdown'], () => {
-
-    // del.sync(['dist']);
+gulp.task('build', ['clean', 'html:dist', 'ssg:precompile', 'sass:compile', 'doc:markdown'], () => {
 
     gulp.src([
             './.tmp/**/*'
         ])
-        .pipe(gulp.dest('dist'));
+        .pipe(
+            gulp.dest('dist')
+        );
 
     gulp.src([
             './app/_config/*',
         ])
-        .pipe(gulp.dest('dist/_config'));
+        .pipe(
+            gulp.dest('dist/_config')
+        );
 
     gulp.src([
             './app/_data/*',
         ])
-        .pipe(gulp.dest('dist/_data'));
+        .pipe(
+            gulp.dest('dist/_data')
+        );
 
     gulp.src([
             './ssg-core/ui/**/*',
         ])
-        .pipe(gulp.dest('dist/'));
+        .pipe(
+            gulp.dest('dist/')
+        );
 
 });
