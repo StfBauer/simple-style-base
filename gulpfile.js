@@ -6,6 +6,7 @@ const gulp = require('gulp'),
     }),
     gulpif = require('gulp-if'),
     ts = require('gulp-typescript'),
+    gulpStylelint = require('gulp-stylelint');
     markdown = require('gulp-marked-json'),
     jsoncombine = require('gulp-jsoncombine'),
     del = require('del');
@@ -144,6 +145,11 @@ gulp.task('sass:compile', () => {
     return gulp.src(watches)
         .pipe($.plumber())
         .pipe($.sourcemaps.init())
+        .pipe(gulpStylelint({
+            reporters: [
+              {formatter: 'string', console: true}
+            ]
+          }))
         .pipe($.sass.sync({
             outputStyle: 'expanded',
             precision: 10,
