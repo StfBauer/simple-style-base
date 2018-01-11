@@ -1,22 +1,24 @@
 /** Gulp base **/
 /* GULP Configuration */
-let gulp = require('gulp'),
+const gulp = require('gulp'),
     $ = require('gulp-load-plugins')({
         lazy: true
     }),
+    gulpif = require('gulp-if'),
     ts = require('gulp-typescript'),
     markdown = require('gulp-marked-json'),
-    jsoncombine = require('gulp-jsoncombine');
+    jsoncombine = require('gulp-jsoncombine'),
+    del = require('del');
 
 /* Browser Sync */
-let browserSync = require('browser-sync'),
+const browserSync = require('browser-sync'),
     reload = browserSync.reload;
 
 /* Configurations */
-let config = require('./ssg.core.config');
+const config = require('./ssg.core.config');
 
 /* core engine */
-let ssgCore = require('./ssg-core-engine/ssg.core.precompile'),
+const ssgCore = require('./ssg-core-engine/ssg.core.precompile'),
     ssgCoreConfig = require('./ssg-core-engine/ssg.core.genConfig');
 
 
@@ -158,6 +160,11 @@ gulp.task('sass:compile', () => {
 
 });
 
+// cleans everythign up
+gulp.task('clean', () => {
+    return del.sync('dist');
+});
+
 // Gulp serve task
 gulp.task('serve', ['ssg:precompile', 'sass:compile', 'doc:markdown'], () => {
 
@@ -167,5 +174,55 @@ gulp.task('serve', ['ssg:precompile', 'sass:compile', 'doc:markdown'], () => {
     // init all watches
     watches();
 
+});
+
+gulp.task('html:dist', () => {
+
+    return gulp.src('app/*.html')
+        .pipe(
+            $.useref({
+                searchPath: ['.', 'node_modules']
+            })
+        )
+        // .pipe(gulpif('*.js', $.minify()))
+        .pipe(gulp.dest('dist'));
+
+});
+
+gulp.task('serve:dist', ['dist'], () => {
+    browserSync.init({
+        notify: false,
+        port: 9000,
+        server: {
+            baseDir: ['dist']
+        }
+    });
+});
+
+
+// Gulp serve task
+gulp.task('dist', ['clean', 'html:dist', 'ssg:precompile', 'sass:compile', 'doc:markdown'], () => {
+
+    // del.sync(['dist']);
+
+    gulp.src([
+            './.tmp/**/*'
+        ])
+        .pipe(gulp.dest('dist'));
+
+    gulp.src([
+            './app/_config/*',
+        ])
+        .pipe(gulp.dest('dist/_config'));
+
+    gulp.src([
+            './app/_data/*',
+        ])
+        .pipe(gulp.dest('dist/_data'));
+
+    gulp.src([
+            './ssg-core/ui/**/*',
+        ])
+        .pipe(gulp.dest('dist/'));
 
 });
