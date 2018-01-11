@@ -6,11 +6,15 @@ const gulp = require('gulp'),
     }),
     gulpif = require('gulp-if'),
     ts = require('gulp-typescript'),
-    sassLint = require('gulp-sass-lint'),
-    gulpStylelint = require('gulp-stylelint'),
+
     markdown = require('gulp-marked-json'),
     jsoncombine = require('gulp-jsoncombine'),
     del = require('del');
+
+/* Linter */
+const sassLint = require('gulp-sass-lint'),
+    tslint = require('gulp-tslint'),
+    gulpStylelint = require('gulp-stylelint');
 
 /* Browser Sync */
 const browserSync = require('browser-sync'),
@@ -47,6 +51,12 @@ let watches = () => {
     // Watch for configuration changes
     gulp.watch(config.watches.staticFiles)
         .on('change', reload);
+
+    // waht everything else
+    gulp.watch([
+        'app/images/**/*',
+        '.tmp/fonts/**/*'
+    ]).on('change', reload);
 
 };
 
@@ -111,20 +121,33 @@ gulp.task('ssg:precompile', ['ssg:config'], () => {
     return ssgCore(config.ssg);
 });
 
-// General typescript compilation
-gulp.task('ts:compile', () => {
-
-    var tsProject = ts.createProject(config.tsconfig);
+gulp.task('ts:lint', () => {
 
     return gulp.src(config.watches.scripts)
         .pipe(
             $.plumber()
         )
         .pipe(
-            $.tslint({
+            tslint({
                 configuration: "tslint.json",
-                formatter: "prose"
+                formatter: "stylish"
             })
+        )
+        .pipe(tslint.report({ emitError: false }));
+        // .pipe(
+        //     gulp.dest('app/scripts')
+        // );
+});
+
+
+// General typescript compilation
+gulp.task('ts:compile', ['ts:lint'], () => {
+
+    var tsProject = ts.createProject(config.tsconfig);
+
+    return gulp.src(config.watches.scripts)
+        .pipe(
+            $.plumber()
         )
         .pipe(
             ts(config.tsconfig)
@@ -138,13 +161,23 @@ gulp.task('ts:compile', () => {
 
 });
 
+// SASS Linting
+gulp.task('sass:lint', () => {
+
+    var watches = config.watches.styles;
+
+    return gulp.src(watches)
+        .pipe(sassLint())
+        .pipe(sassLint.format());
+
+});
+
 // SASS compilation
 gulp.task('sass:compile', ['sass:lint'], () => {
 
     var watches = config.watches.styles;
 
     return gulp.src(watches)
-        .pipe($.plumber())
         .pipe($.sourcemaps.init())
         .pipe($.sass.sync({
             outputStyle: 'expanded',
@@ -155,26 +188,16 @@ gulp.task('sass:compile', ['sass:lint'], () => {
             browsers: ['> 1%', 'last 2 versions', 'Firefox ESR']
         }))
         .pipe($.sourcemaps.write())
+        .pipe(gulp.dest(config.target.styles))
         .pipe(gulpStylelint({
             reporters: [{
                 formatter: 'string',
                 console: true
             }]
         }))
-        .pipe(gulp.dest(config.target.styles))
         .pipe(reload({
             stream: true
         }));
-
-});
-
-gulp.task('sass:lint', () => {
-
-    var watches = config.watches.styles;
-
-    return gulp.src(watches)
-        .pipe(sassLint())
-        .pipe(sassLint.format());
 
 });
 
