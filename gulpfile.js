@@ -6,7 +6,8 @@ const gulp = require('gulp'),
     }),
     gulpif = require('gulp-if'),
     ts = require('gulp-typescript'),
-    gulpStylelint = require('gulp-stylelint');
+    sassLint = require('gulp-sass-lint'),
+    gulpStylelint = require('gulp-stylelint'),
     markdown = require('gulp-marked-json'),
     jsoncombine = require('gulp-jsoncombine'),
     del = require('del');
@@ -138,18 +139,13 @@ gulp.task('ts:compile', () => {
 });
 
 // SASS compilation
-gulp.task('sass:compile', () => {
+gulp.task('sass:compile', ['sass:lint'], () => {
 
     var watches = config.watches.styles;
 
     return gulp.src(watches)
         .pipe($.plumber())
         .pipe($.sourcemaps.init())
-        .pipe(gulpStylelint({
-            reporters: [
-              {formatter: 'string', console: true}
-            ]
-          }))
         .pipe($.sass.sync({
             outputStyle: 'expanded',
             precision: 10,
@@ -159,10 +155,26 @@ gulp.task('sass:compile', () => {
             browsers: ['> 1%', 'last 2 versions', 'Firefox ESR']
         }))
         .pipe($.sourcemaps.write())
+        .pipe(gulpStylelint({
+            reporters: [{
+                formatter: 'string',
+                console: true
+            }]
+        }))
         .pipe(gulp.dest(config.target.styles))
         .pipe(reload({
             stream: true
         }));
+
+});
+
+gulp.task('sass:lint', () => {
+
+    var watches = config.watches.styles;
+
+    return gulp.src(watches)
+        .pipe(sassLint())
+        .pipe(sassLint.format());
 
 });
 
