@@ -25,7 +25,8 @@ const config = require('./ssg.core.config');
 
 /* core engine */
 const ssgCore = require('./ssg-core-engine/ssg.core.precompile'),
-    ssgCoreConfig = require('./ssg-core-engine/ssg.core.genConfig');
+    ssgCoreConfig = require('./ssg-core-engine/ssg.core.genConfig'),
+    ssgCoreHelper = require('./ssg-core-engine/ssg.core.helpers');
 
 
 // watchs on file system
@@ -86,20 +87,21 @@ gulp.task('doc:markdown', () => {
             pedantic: true,
             smartypants: true
         }))
-        .pipe(jsoncombine(config.documentation.path, function (data) {
+        .pipe(jsoncombine(config.documentation.path, function (data, meta) {
 
             var keys = [],
                 name,
                 newDocData = {};
 
-            for (name in data) {
+            for (name in meta) {
 
-                // check for slashes in variable name
-                var newname = name.replace(new RegExp(/\/|\\/g), '_');
+                let current = meta[name];
+
+                let key = ssgCoreHelper.mdGetKey(current);
 
                 // create a new object property with normalized name
-                newDocData[newname] = {
-                    title: data[name].title,
+                newDocData[key] = {
+                    title: data[name].title !== undefined ? data[name].title : '',
                     body: data[name].body
                 }
 
@@ -221,29 +223,28 @@ gulp.task('serve', ['ssg:precompile', 'sass:compile', 'doc:markdown'], () => {
 
 });
 
+// Compaile HTML JS scripts
 gulp.task('html:dist', () => {
+
+    /**
+     * Bundle prismJS Syntax highlighting
+     */
+    gulp.src('node_modules/prismjs/components/*.min.js')
+        .pipe(gulp.dest('dist/prismjs/components'));
+    /**
+     * merge files together
+     */
 
     return gulp.src('app/*.html')
         .pipe(
             $.useref({
-                searchPath: ['.', 'node_modules']
+                searchPath: ['.', 'node_modules', 'ssg-core-engine', '.tmp']
             })
         )
         // .pipe(gulpif('*.js', $.minify()))
         .pipe(gulp.dest('dist'));
 
 });
-
-gulp.task('serve:dist', ['dist'], () => {
-    browserSync.init({
-        notify: false,
-        port: 9000,
-        server: {
-            baseDir: ['dist']
-        }
-    });
-});
-
 
 // Gulp serve task
 gulp.task('build', ['clean', 'html:dist', 'ssg:precompile', 'sass:compile', 'doc:markdown'], () => {
@@ -276,4 +277,15 @@ gulp.task('build', ['clean', 'html:dist', 'ssg:precompile', 'sass:compile', 'doc
             gulp.dest('dist/')
         );
 
+});
+
+// Server from distribution folder
+gulp.task('serve:dist', ['dist'], () => {
+    browserSync.init({
+        notify: false,
+        port: 9000,
+        server: {
+            baseDir: ['dist']
+        }
+    });
 });
